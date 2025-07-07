@@ -1,5 +1,3 @@
-
-
 on:
   push:
     branches:
@@ -33,10 +31,10 @@ jobs:
             fi
 
             echo "Stopping containers"
-            docker compose down
+            sudo /usr/bin/docker compose down
 
             echo "Building containers"
-            docker compose build
+            sudo /usr/bin/docker compose build
 
             echo "Running containers"
-            docker compose up -d
+            sudo /usr/bin/docker compose up -d
