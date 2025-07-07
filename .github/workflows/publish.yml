@@ -1,41 +1,42 @@
 
+
 on:
   push:
     branches:
-     - main
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-     - name: Checkout code
-       uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-     - name: Deploy over SSH
-       uses: appleboy/ssh-action@v1.0.3
-       with:
-        host: ${{ secrets.DB_HOST }}
-        username: ${{ secrets.DB_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          echo "Creating project folder if it doesn't exists"
-          mkdir -p /home/ubuntu/nest_dars
-          cd /home/ubuntu/nest_dars
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DB_HOST }}
+          username: ${{ secrets.DB_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Creating project folder if it doesn't exist"
+            mkdir -p /home/ubuntu/nest_dars
+            cd /home/ubuntu/nest_dars
 
-          if [ ! -d .git ]; then
-            echo "Cloning repository"
-            git clone https://github.com/Abrorbek-on/dars4.git .
+            if [ ! -d .git ]; then
+              echo "Cloning repository"
+              git clone https://github.com/Abrorbek-on/dars4.git .
             else
               echo "Pulling latest changes"
               git pull origin main
             fi
 
             echo "Stopping containers"
-            docker compos down
+            docker compose down
 
             echo "Building containers"
-            docker compos build
+            docker compose build
 
             echo "Running containers"
-            docker compos up -d
+            docker compose up -d
